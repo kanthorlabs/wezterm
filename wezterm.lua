@@ -8,7 +8,7 @@ local appearance = require 'appearance'
 local config = wezterm.config_builder()
 
 -- (This is where our config will go)
-config.default_domain = 'WSL:Ubuntu'
+-- config.default_domain = 'WSL:Ubuntu'
 config.color_scheme = 'Tokyo Night'
 
 -- Slightly transparent and blurred background

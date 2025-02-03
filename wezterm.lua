@@ -11,6 +11,10 @@ local config = wezterm.config_builder()
 -- config.default_domain = 'WSL:Ubuntu'
 config.color_scheme = 'Tokyo Night'
 
+config.enable_tab_bar = true
+config.initial_rows = 38
+config.initial_cols = 190
+
 -- Slightly transparent and blurred background
 config.window_background_opacity = 0.95
 config.macos_window_background_blur = 30

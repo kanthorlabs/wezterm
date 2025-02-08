@@ -12,8 +12,8 @@ local config = wezterm.config_builder()
 config.color_scheme = 'Tokyo Night'
 
 config.enable_tab_bar = true
-config.initial_rows = 38
-config.initial_cols = 190
+config.initial_rows = 35
+config.initial_cols = 150
 
 -- Slightly transparent and blurred background
 config.window_background_opacity = 0.95

@@ -89,5 +89,18 @@ config.set_environment_variables = {
   PATH = '/opt/homebrew/bin:' .. os.getenv('PATH')
 }
 
+config.keys = {
+  {
+    key = "LeftArrow",
+    mods = "OPT",
+    action = wezterm.action.SendString("\x1bb"),
+  },
+  {
+    key = "RightArrow",
+    mods = "OPT",
+    action = wezterm.action.SendString("\x1bf"),
+  },
+}
+
 -- Returns our config to be evaluated. We must always do this at the bottom of this file
 return config

@@ -120,6 +120,16 @@ config.keys = {
   },
   {
     key = "LeftArrow",
+    mods = "CMD",
+    action = wezterm.action.SendString("\x01"),
+  },
+  {
+    key = "RightArrow",
+    mods = "CMD",
+    action = wezterm.action.SendString("\x05"),
+  },
+  {
+    key = "LeftArrow",
     mods = "CMD|SHIFT",
     action = wezterm.action.MoveTabRelative(-1),
   },

@@ -24,17 +24,35 @@ config.macos_window_background_blur = 30
 -- you want to keep the window controls visible and integrate
 -- them into the tab bar.
 config.window_decorations = 'RESIZE'
-local function segments_for_right_status(window)
-  return {
-    window:active_workspace(),
-    wezterm.strftime('%a %b %-d %H:%M'),
-    wezterm.hostname(),
-  }
+local function active_tab_number(window)
+  for _, tab_info in ipairs(window:mux_window():tabs_with_info()) do
+    if tab_info.is_active then
+      return math.min(tab_info.index + 1, 8)
+    end
+  end
+  return 1
 end
 
-wezterm.on('update-status', function(window, _)
+local function segments_for_right_status(window, pane)
+  local user_vars = pane:get_user_vars()
+  local tab_number = active_tab_number(window)
+  local segments = {
+    "⌘⇧←→ move tab · ⌘" .. tab_number .. " go tab " .. tab_number
+      .. " · ⌃⇧←↑↓→ go split · ⌘D split ⇆ · ⌘⇧D split ⇅ · ⌘W close",
+  }
+  if (user_vars.GIT_REPO or '') ~= '' then
+    table.insert(segments, user_vars.GIT_REPO .. ':' .. user_vars.GIT_BRANCH)
+  end
+  if (user_vars.AWS_PROFILE or '') ~= '' then
+    table.insert(segments, 'aws:' .. user_vars.AWS_PROFILE)
+  end
+  table.insert(segments, wezterm.strftime('%a %b %-d %H:%M'))
+  return segments
+end
+
+wezterm.on('update-status', function(window, pane)
   local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
-  local segments = segments_for_right_status(window)
+  local segments = segments_for_right_status(window, pane)
 
   local color_scheme = window:effective_config().resolved_palette
   -- Note the use of wezterm.color.parse here, this returns
@@ -99,6 +117,31 @@ config.keys = {
     key = "RightArrow",
     mods = "OPT",
     action = wezterm.action.SendString("\x1bf"),
+  },
+  {
+    key = "LeftArrow",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.MoveTabRelative(-1),
+  },
+  {
+    key = "RightArrow",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.MoveTabRelative(1),
+  },
+  {
+    key = "d",
+    mods = "CMD",
+    action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" },
+  },
+  {
+    key = "d",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" },
+  },
+  {
+    key = "w",
+    mods = "CMD",
+    action = wezterm.action.CloseCurrentPane { confirm = true },
   },
 }
 
